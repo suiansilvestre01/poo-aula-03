@@ -1,0 +1,159 @@
+# cadastro.py
+
+pessoas = []
+
+def cadastrar():
+    nome = input("Digite o nome: ")
+    email = input("Digite o email: ")
+    idade = int(input("Digite a idade: "))
+    pessoa = {"nome": nome, "email": email, "idade": idade}
+    pessoas.append(pessoa)
+    print("Pessoa cadastrada com sucesso!\n")
+
+def listar():
+    if not pessoas:
+        print("Nenhuma pessoa cadastrada.\n")
+    else:
+        for i, p in enumerate(pessoas):
+            print(f"{i} - Nome: {p['nome']} | Email: {p['email']} | Idade: {p['idade']}")
+
+def atualizar():
+    listar()
+    indice = int(input("Digite o índice da pessoa para atualizar: "))
+    if 0 <= indice < len(pessoas):
+        nome = input("Novo nome: ")
+        email = input("Novo email: ")
+        idade = int(input("Nova idade: "))
+        pessoas[indice].update({"nome": nome, "email": email, "idade": idade})
+        print("Cadastro atualizado com sucesso!\n")
+    else:
+        print("Índice inválido!\n")
+
+def excluir():
+    listar()
+    indice = int(input("Digite o índice da pessoa para excluir: "))
+    if 0 <= indice < len(pessoas):
+        confirmacao = input(f"Tem certeza que deseja excluir {pessoas[indice]['nome']}? (s/n): ").lower()
+        if confirmacao == "s":
+            pessoas.pop(indice)
+            print("Pessoa excluída com sucesso!\n")
+        else:
+            print("Exclusão cancelada.\n")
+    else:
+        print("Índice inválido!\n")
+
+def menu():
+    while True:
+        print("1 - Cadastrar")
+        print("2 - Listar")
+        print("3 - Atualizar")
+        print("4 - Excluir")
+        print("5 - Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            cadastrar()
+        elif opcao == "2":
+            listar()
+        elif opcao == "3":
+            atualizar()
+        elif opcao == "4":
+            excluir()
+        elif opcao == "5":
+            break
+        else:
+            print("Opção inválida!\n")
+
+if __name__ == "__main__":
+    menu()
+
+#####
+
+# atividade.py
+
+class Emprestimo:
+    def __init__(self, valor, quitado=False):
+        self.valor = valor
+        self.quitado = quitado
+
+    def __str__(self):
+        status = "Quitado" if self.quitado else "Pendente"
+        return f"Empréstimo de R$ {self.valor:.2f} - {status}"
+
+
+class Cliente:
+    def __init__(self, nome):
+        self.nome = nome
+        self.emprestimos = []
+
+    def adicionar_emprestimo(self, valor):
+        emprestimo = Emprestimo(valor)
+        self.emprestimos.append(emprestimo)
+
+    def listar_emprestimos(self):
+        if not self.emprestimos:
+            print("Nenhum empréstimo registrado.")
+        else:
+            for e in self.emprestimos:
+                print(e)
+
+    def pode_receber_novo(self):
+        pendentes = [e for e in self.emprestimos if not e.quitado]
+        total_divida = sum(e.valor for e in pendentes)
+
+        if len(pendentes) >= 2 or total_divida > 10000:
+            return False
+        return True
+
+
+def menu():
+    clientes = []
+
+    while True:
+        print("\n--- Menu ---")
+        print("1 - Cadastrar cliente")
+        print("2 - Adicionar empréstimo")
+        print("3 - Listar clientes e empréstimos")
+        print("4 - Verificar se cliente pode receber novo empréstimo")
+        print("5 - Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            nome = input("Nome do cliente: ")
+            clientes.append(Cliente(nome))
+            print("Cliente cadastrado com sucesso!")
+
+        elif opcao == "2":
+            if not clientes:
+                print("Nenhum cliente cadastrado!")
+                continue
+            for i, c in enumerate(clientes):
+                print(f"{i} - {c.nome}")
+            indice = int(input("Escolha o cliente: "))
+            valor = float(input("Valor do empréstimo: "))
+            clientes[indice].adicionar_emprestimo(valor)
+            print("Empréstimo adicionado com sucesso!")
+
+        elif opcao == "3":
+            if not clientes:
+                print("Nenhum cliente cadastrado!")
+            else:
+                for c in clientes:
+                    print(f"\nCliente: {c.nome}")
+                    c.listar_emprestimos()
+
+        elif opcao == "4":
+            for c in clientes:
+                status = "APTO" if c.pode_receber_novo() else "NÃO APTO"
+                print(f"Cliente {c.nome} está {status} para novo empréstimo.")
+
+        elif opcao == "5":
+            break
+
+        else:
+            print("Opção inválida!")
+
+
+if __name__ == "__main__":
+    menu()
+    
